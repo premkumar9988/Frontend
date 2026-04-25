@@ -1,0 +1,46 @@
+.order-card {
+  background: #f8f5f0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+/* Status Colors */
+.status {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: white;
+}
+
+.status.processing {
+  background: #ff9800;
+}
+
+.status.shipped {
+  background: #2196f3;
+}
+
+.status.delivered {
+  background: #1b4332;
+}
+
+.status.cancelled {
+  background: #e53935;
+}
+
+/* Buttons */
+.btn-cancel {
+  background: #e53935;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+
+.btn-secondary {
+  background: #2f3e46;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+}

@@ -1,0 +1,232 @@
+.footer {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #020617 100%);
+  color: #e5e7eb;
+  padding: 80px 20px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle background pattern */
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  min-width: 0;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #f97316, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.desc {
+  font-size: 15px;
+  color: #9ca3af;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin-bottom: 16px;
+  color: #f97316;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.link {
+  display: block;
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1.8;
+  padding: 4px 0;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #f97316;
+  transform: translateX(4px);
+}
+
+.contactItem {
+  color: #d1d5db;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.socials {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.socialIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(249, 115, 22, 0.1);
+  color: #f97316;
+  border-radius: 12px;
+  font-size: 18px;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.socialIcon:hover {
+  background: #f97316;
+  color: white;
+  transform: translateY(-2px) scale(1.05);
+}
+
+.newsletterSection {
+  margin-top: 60px;
+  padding: 40px 0;
+  border-top: 1px solid rgba(55, 65, 81, 0.5);
+  position: relative;
+  z-index: 1;
+}
+
+.newsletterContent {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.newsletterTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 12px;
+  letter-spacing: -0.025em;
+}
+
+.newsletterDesc {
+  color: #9ca3af;
+  font-size: 16px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.newsletterForm {
+  display: flex;
+  max-width: 400px;
+  margin: 0 auto;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.input {
+  flex: 1;
+  min-width: 250px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 2px solid rgba(55, 65, 81, 0.5);
+  background: rgba(15, 23, 42, 0.8);
+  color: #e5e7eb;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.btn {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  border: none;
+  color: #fff;
+  padding: 16px 28px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.6);
+}
+
+.bottom {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(55, 65, 81, 0.5);
+}
+
+.bottomContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.copyright {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.bottomLinks {
+  display: flex;
+  gap: 24px;
+}
+
+.bottomLink {
+  font-size: 13px;
+  padding: 6px 0;
+  color: #d1d5db;
+  text-decoration: none;
+}
+
+.bottomLink:hover {
+  color: #f97316;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bottomContent {
+    justify-content: center;
+    text-align: center;
+  }
+}
