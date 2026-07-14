@@ -4,7 +4,7 @@ import { ShoppingCart, User, Search, X, BookOpen, Menu } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import { useAuth } from "@/context/AuthContext"; // 👈 add your auth context import
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
@@ -12,11 +12,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { totalItems } = useCart();
-  const { user, logoutUser } = useAuth(); // 👈 get user and logoutUser from auth context
+  const { user, logout } = useAuth(); // ✅ fixed: was logoutUser
   const searchRef = useRef(null);
   const router = useRouter();
-
-
 
   /* ── scroll shadow ── */
   useEffect(() => {
@@ -74,7 +72,6 @@ export default function Navbar() {
           font-family: 'DM Sans', sans-serif;
         }
  
-        /* ── BASE ── */
         .bz-nav {
           position: sticky;
           top: 0;
@@ -82,7 +79,6 @@ export default function Navbar() {
           font-family: 'DM Sans', sans-serif;
         }
  
-        /* ── TOP STRIP ── */
         .bz-strip {
           background: var(--bz-accent);
           color: #fff;
@@ -93,7 +89,6 @@ export default function Navbar() {
           padding: 6px 24px;
         }
  
-        /* ── MAIN BAR ── */
         .bz-bar {
           background: var(--bz-bg);
           border-bottom: 1.5px solid var(--bz-border);
@@ -109,7 +104,6 @@ export default function Navbar() {
         }
         .bz-bar.scrolled { box-shadow: var(--bz-shadow); }
  
-        /* ── LOGO ── */
         .bz-logo {
           display: flex;
           align-items: center;
@@ -139,7 +133,6 @@ export default function Navbar() {
         }
         .bz-logo-text span { color: var(--bz-text); }
  
-        /* ── DESKTOP LINKS ── */
         .bz-links {
           display: flex;
           align-items: center;
@@ -175,7 +168,6 @@ export default function Navbar() {
         .bz-link:hover { color: var(--bz-accent); background: #fdf4ef; }
         .bz-link:hover::after { transform: scaleX(1); }
  
-        /* ── RIGHT ACTIONS ── */
         .bz-actions {
           display: flex;
           align-items: center;
@@ -220,7 +212,6 @@ export default function Navbar() {
           box-shadow: 0 0 0 2px #fff;
         }
  
-        /* ── LOGIN BUTTON ── */
         .bz-login-btn {
           display: flex;
           align-items: center;
@@ -244,7 +235,6 @@ export default function Navbar() {
         }
         @media (max-width: 480px) { .bz-login-btn span { display: none; } }
 
-        /* ── PROFILE AVATAR ── */
         .bz-avatar {
           width: 35px;
           height: 35px;
@@ -263,7 +253,6 @@ export default function Navbar() {
         }
         .bz-avatar:hover { opacity: 0.85; }
 
-        /* ── LOGOUT BUTTON ── */
         .bz-logout-btn {
           display: flex;
           align-items: center;
@@ -288,7 +277,6 @@ export default function Navbar() {
         }
         @media (max-width: 480px) { .bz-logout-btn span { display: none; } }
  
-        /* ── DIVIDER ── */
         .bz-divider {
           width: 1px;
           height: 26px;
@@ -297,13 +285,11 @@ export default function Navbar() {
           flex-shrink: 0;
         }
  
-        /* ── HAMBURGER ── */
         .bz-hamburger {
           display: none;
         }
         @media (max-width: 767px) { .bz-hamburger { display: flex; } }
  
-        /* ── SEARCH OVERLAY ── */
         .bz-search-overlay {
           position: fixed;
           inset: 0;
@@ -381,7 +367,6 @@ export default function Navbar() {
         }
         .bz-search-close:hover { color: var(--bz-accent); background: #fdf4ef; }
  
-        /* ── MOBILE DRAWER ── */
         .bz-mobile-drawer {
           background: var(--bz-bg);
           border-top: 1.5px solid var(--bz-border);
@@ -419,14 +404,12 @@ export default function Navbar() {
           background: var(--bz-border);
           margin: 6px 0;
         }
-          
       `}</style>
 
       <nav className="bz-nav">
         {/* ── ANNOUNCEMENT STRIP ── */}
         <div className="bz-strip">
-          📚 Free shipping on orders over ₹499 &nbsp;·&nbsp; New arrivals every
-          week
+          📚 Free shipping on orders over ₹499 &nbsp;·&nbsp; New arrivals every week
         </div>
 
         {/* ── MAIN BAR ── */}
@@ -495,7 +478,7 @@ export default function Navbar() {
                 <button
                   className="bz-logout-btn"
                   onClick={() => {
-                    logoutUser();
+                    logout(); // ✅ fixed: was logoutUser()
                     window.location.reload();
                   }}
                 >

@@ -30,19 +30,38 @@ export default function ContactPage() {
     e.preventDefault();
     setIsLoading(true);
     setStatus("sending");
-    await new Promise((r) => setTimeout(r, 1500));
-    setIsLoading(false);
-    setStatus("success");
-    setForm({ name: "", email: "", subject: "", message: "" });
-    setTimeout(() => setStatus(""), 6000);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setStatus("success");
+        setForm({ name: "", email: "", subject: "", message: "" });
+        setTimeout(() => setStatus(""), 6000);
+      } else {
+        setStatus("error");
+        alert(data.error || "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      setStatus("error");
+      alert("Network error. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const contactInfo = [
     {
       icon: Mail,
       title: "Email Us",
-      value: "support@bookstore.com",
-      href: "mailto:support@bookstore.com",
+      value: "premkumar00786337@gmail.com",
+      href: "mailto:premkumar00786337@gmail.com",
       gradient: "from-blue-500 to-cyan-500",
     },
     {
@@ -72,18 +91,11 @@ export default function ContactPage() {
     <div className="min-h-screen relative overflow-hidden">
 
       <div className="absolute inset-0">
-    
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/90 to-emerald-900/80" />
-        
-     
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-emerald-500/5 animate-pulse" />
-        
-  
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute top-40 -left-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl animate-[pulse_4s_ease-in-out_infinite_1s]" />
         <div className="absolute bottom-40 right-20 w-96 h-96 bg-purple-500/8 rounded-full blur-3xl animate-[pulse_4s_ease-in-out_infinite_2s]" />
-        
-       
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <div className="absolute inset-0 bg-[linear-gradient(rgba(156,163,175,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(156,163,175,0.1)_1px,transparent_1px)] bg-[size:40px_40px] animate-pulse" />
         </div>
@@ -92,7 +104,7 @@ export default function ContactPage() {
       {/* Page Content */}
       <div className="relative z-10 pt-20 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           {/* Hero Section */}
           <section className="text-center py-20 md:py-28 mb-16 lg:mb-20">
             {/* Badge */}
@@ -110,7 +122,7 @@ export default function ContactPage() {
             </h1>
 
             <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed mb-12 px-4">
-              Your reading journey deserves world-class support — from order assistance to 
+              Your reading journey deserves world-class support — from order assistance to
               personalized book recommendations by our expert team.
             </p>
 
@@ -131,10 +143,10 @@ export default function ContactPage() {
 
           {/* Main Content Grid */}
           <div className="grid lg:grid-cols-2 gap-12 xl:gap-16 items-start">
-            
+
             {/* Left Column - Contact Info */}
             <div className="space-y-8 lg:sticky lg:top-28 h-fit">
-              
+
               {/* Section Header */}
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-2.5 bg-gradient-to-r from-blue-500/20 to-emerald-500/20 backdrop-blur-xl text-white px-5 py-3 rounded-2xl border border-white/20 text-sm font-bold shadow-lg">
@@ -157,7 +169,7 @@ export default function ContactPage() {
                   >
                     {/* Animated shimmer */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 -translate-x-[100%] group-hover:translate-x-[100vw] transition-transform duration-1000" />
-                    
+
                     {/* Icon */}
                     <div className={`w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-br ${gradient} rounded-2xl flex items-center justify-center flex-shrink-0 shadow-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                       <Icon className="w-7 h-7 lg:w-8 lg:h-8 text-white" />
@@ -198,10 +210,10 @@ export default function ContactPage() {
 
             {/* Right Column - Contact Form */}
             <div className="space-y-10 lg:space-y-12">
-              
+
               {/* Form Container */}
               <div className="bg-white/5 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 xl:p-12 border border-white/10 shadow-2xl">
-                
+
                 {/* Form Header */}
                 <div className="inline-flex items-center gap-3 bg-gradient-to-r from-emerald-500/20 via-blue-500/20 to-cyan-500/20 backdrop-blur-xl text-white px-6 py-4 rounded-2xl border border-white/20 mb-8 lg:mb-10 font-bold text-lg shadow-xl">
                   <Send className="w-6 h-6" />
@@ -218,8 +230,25 @@ export default function ContactPage() {
                       <div>
                         <h4 className="font-black text-2xl lg:text-3xl mb-2">Message Sent Successfully! 🚀</h4>
                         <p className="text-lg lg:text-xl text-emerald-100/95 leading-relaxed">
-                          Our support team will respond within 2 hours. 
+                          Our support team will respond within 2 hours.
                           You'll receive a confirmation email shortly.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {status === "error" && (
+                  <div className="p-6 lg:p-8 bg-gradient-to-r from-red-500/15 to-rose-500/15 border-2 border-red-400/40 rounded-3xl mb-8 shadow-2xl backdrop-blur-xl">
+                    <div className="flex items-start gap-5 text-red-50">
+                      <div className="w-14 h-14 lg:w-16 lg:h-16 bg-red-500/30 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-2xl">
+                        <Mail className="w-7 h-7 lg:w-8 lg:h-8 text-red-300" />
+                      </div>
+                      <div>
+                        <h4 className="font-black text-2xl lg:text-3xl mb-2">Failed to Send ❌</h4>
+                        <p className="text-lg lg:text-xl text-red-100/95 leading-relaxed">
+                          Something went wrong. Please try again or email us directly.
                         </p>
                       </div>
                     </div>
@@ -228,7 +257,7 @@ export default function ContactPage() {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-6 lg:space-y-7">
-                  
+
                   {/* Name + Email */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
                     <div className="space-y-2">
@@ -325,8 +354,8 @@ export default function ContactPage() {
                     key={title}
                     className="text-center p-5 lg:p-6 backdrop-blur-xl bg-white/10 rounded-lg shadow-lg"
                   >
-                    <Icon className="w-10 h-10 mb-2" />
-                    <h3 className="text-lg font-semibold mb-1">{title}</h3>
+                    <Icon className={`w-10 h-10 mb-2 mx-auto ${color}`} />
+                    <h3 className="text-lg font-semibold mb-1 text-white">{title}</h3>
                     <p className="text-sm text-gray-400">{desc}</p>
                   </div>
                 ))}

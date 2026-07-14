@@ -140,7 +140,9 @@ const handlePayment = async () => {
     <div style={p.page}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
-        *{box-sizing:border-box;margin:0;padding:0;}
+       .checkout-page *{box-sizing:border-box;}
+  .checkout-page h1,.checkout-page h2,.checkout-page h3,
+  .checkout-page p,.checkout-page ul,.checkout-page li{margin:0;padding:0;}
         body{font-family:'DM Sans',sans-serif;background:#f9fafb;}
         .qty-btn:hover{border-color:#f97316!important;color:#f97316!important;}
         .cta-btn:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(249,115,22,0.42)!important;}
@@ -361,7 +363,7 @@ const handlePayment = async () => {
 
 /*  STYLES  */
 const p = {
-  page:        { minHeight:'100vh', background:'#f9fafb', fontFamily:"'DM Sans',sans-serif", color:'#111827' },
+  page:        { minHeight:'100vh', background:'#f9fafb', fontFamily:"'DM Sans',sans-serif", color:'#111827',overflowX:'hidden'  },
   header:      { background:'#fff', borderBottom:'1px solid #e5e7eb', position:'sticky', top:0, zIndex:50, boxShadow:'0 1px 5px rgba(0,0,0,0.05)' },
   headerInner: { maxWidth:1160, margin:'0 auto', padding:'14px 24px', display:'flex', alignItems:'center', justifyContent:'space-between' },
   logoText:    { fontFamily:"'Playfair Display',serif", fontSize:22, fontWeight:700, color:'#111827', letterSpacing:'-0.02em' },

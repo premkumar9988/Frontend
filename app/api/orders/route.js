@@ -1,32 +1,36 @@
-
-
 let orders = [];
+
+export async function GET() {
+  return Response.json({
+    success: true,
+    orders,
+  });
+}
 
 export async function POST(req) {
   const body = await req.json();
 
-  const items = (body.items || []).map((item) => ({
-    title: item.title || item.name || "",
-    author: item.author || "",
-   image: item.cover || item.image || item.thumbnail || "https://via.placeholder.com/80x100?text=Book",
-    price: item.price || 0,
-    qty: item.qty || item.quantity || 1,
-  }));
+  // ✅ ensure only valid items are stored
+  const filteredItems = (body.items || []).filter(item => item.qty > 0);
 
   const newOrder = {
-    id: "ORD" + Date.now(),
-    date: new Date().toLocaleDateString("en-IN", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    }),
+    id: "ORD-" + Date.now(),
+    date: new Date().toLocaleDateString(),
+
+    items: filteredItems.map(item => ({
+      title: item.title,
+      author: item.author,
+      image: item.image || item.cover, // ✅ handle both
+      price: item.price,
+      qty: item.qty,
+    })),
+
+    itemsCount: filteredItems.length,
+    total: body.total,
     status: body.status || "processing",
-    paymentMethod: body.paymentMethod || "Online",
-    deliveryAddress: body.deliveryAddress || "",
-    trackingNumber: body.trackingNumber || "TRK" + Date.now(),
-    items,
-    itemsCount: items.reduce((sum, i) => sum + (i.qty || 1), 0),
-    total: body.total || items.reduce((sum, i) => sum + i.price * i.qty, 0),
+    paymentMethod: body.paymentMethod,
+    trackingNumber: "TRK" + Math.floor(Math.random() * 1000000),
+    deliveryAddress: body.deliveryAddress,
   };
 
   orders.push(newOrder);
@@ -34,12 +38,5 @@ export async function POST(req) {
   return Response.json({
     success: true,
     order: newOrder,
-  });
-}
-
-export async function GET() {
-  return Response.json({
-    success: true,
-    orders,
   });
 }

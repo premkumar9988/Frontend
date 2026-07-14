@@ -402,7 +402,9 @@ export default function Home() {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
-        * { box-sizing: border-box; }
+ .home-page *{box-sizing:border-box;}
+.home-page h1,.home-page h2,.home-page h3,
+.home-page p,.home-page ul,.home-page li{margin:0;padding:0;}
         body { font-family: 'DM Sans', sans-serif; }
         .bz-page { background: #fdf8f4; min-height: 100vh; }
 

@@ -344,12 +344,16 @@ export default function OrderTrackingPage() {
                     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                       {order.items.map((item, i) => (
                         <div key={i} style={s.itemRow}>
-                          <div style={s.coverBox}>
-                            {item.cover || item.image
-                              ? <img src={item.cover || item.image} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { e.target.style.display = "none"; }}/>
-                              : <span style={{ fontSize: 22 }}>📚</span>
-                            }
-                          </div>
+                         <div style={s.coverBox}>
+  {(item.cover || item.image) && (
+    <img
+      src={item.cover || item.image}
+      alt={item.title}
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+      onError={(e) => { e.target.parentElement.style.display = "none"; }}
+    />
+  )}
+</div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <p style={{ fontSize: 13, fontWeight: 700, color: "#111827", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.title}</p>
                             {item.author && <p style={{ fontSize: 11, color: "#9ca3af", marginTop: 2 }}>by {item.author}</p>}

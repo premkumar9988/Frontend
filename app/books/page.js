@@ -128,7 +128,7 @@ export default function Books() {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; }*
         body { font-family: 'DM Sans', sans-serif; }
 
         :root {

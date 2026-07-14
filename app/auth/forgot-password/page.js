@@ -31,7 +31,7 @@ const KeyIcon = () => (
 );
 
 
-export default function ForgotPasswordPage() {
+export default function ForgotPassword() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
