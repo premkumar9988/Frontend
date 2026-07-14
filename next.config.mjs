@@ -14,10 +14,6 @@ const nextConfig = {
       },
     ],
   },
-
-  turbopack: {
-    root: "C:/Users/premk_vnesai/OneDrive/Desktop/nextjs",
-  },
 };
 
 export default nextConfig;
