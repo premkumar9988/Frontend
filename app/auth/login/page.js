@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import "@/styles/auth.css";
@@ -39,8 +39,8 @@ function validate(fields) {
 
 /* ── Hardcoded demo users (fallback) ── */
 const DEMO_USERS = [
-  { id: "user_1", name: "Prem Kumar",   email: "prem@gmail.com",       password: "123456789" },
-  { id: "user_2", name: "Prem Kumar 2", email: "premkumar@gmail.com",  password: "123456789" },
+  { id: "user_1", name: "Prem Kumar", email: "prem@gmail.com", password: "123456789" },
+  { id: "user_2", name: "Prem Kumar 2", email: "premkumar@gmail.com", password: "123456789" },
 ];
 
 /* ── Get all users (demo + registered) ── */
@@ -54,7 +54,8 @@ function getAllUsers() {
   }
 }
 
-export default function LoginPage() {
+/* ── Inner component: uses useSearchParams, must live inside <Suspense> ── */
+function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const { login } = useAuth();
@@ -130,12 +131,14 @@ export default function LoginPage() {
         {/* Tabs */}
         <div className="auth-tabs">
           <button
+            type="button"
             className={`auth-tab ${tab === "login" ? "active" : ""}`}
             onClick={() => { setTab("login"); router.push("/auth/login"); }}
           >
             Sign in
           </button>
           <button
+            type="button"
             className={`auth-tab ${tab === "register" ? "active" : ""}`}
             onClick={() => { setTab("register"); router.push("/auth/register"); }}
           >
@@ -169,10 +172,19 @@ export default function LoginPage() {
             icon={<LockIcon />} error={errors.password}
             rightLabel={<Link href="/auth/forgot-password">Forgot?</Link>}
           />
-          <AuthButton loading={loading}>Sign in</AuthButton>
+          <AuthButton type="submit" loading={loading}>Sign in</AuthButton>
         </form>
 
       </div>
     </div>
+  );
+}
+
+/* ── Page export: wraps the form in Suspense (required for useSearchParams) ── */
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

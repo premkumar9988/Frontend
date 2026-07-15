@@ -1,6 +1,12 @@
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const secretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!secretKey) {
+  throw new Error("Missing STRIPE_SECRET_KEY environment variable");
+}
+
+const stripe = new Stripe(secretKey);
 
 export async function POST(req) {
   try {
@@ -16,22 +22,22 @@ export async function POST(req) {
         {
           price_data: {
             currency: "inr",
-            product_data: { name: "Book Order" },
+            product_data: {
+              name: "Book Order",
+            },
             unit_amount: amount * 100,
           },
           quantity: 1,
         },
       ],
       mode: "payment",
-      success_url: "http://localhost:3000/order-success",
-      cancel_url: "http://localhost:3000/checkout",
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/order-success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout`,
     });
 
-    
     return Response.json({ url: session.url });
-
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Stripe error" }, { status: 500 });
+    return Response.json({ error: error.message }, { status: 500 });
   }
 }

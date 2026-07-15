@@ -1,3 +1,4 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
@@ -13,6 +14,10 @@ const nextConfig = {
         hostname: "th.bing.com",
       },
     ],
+  },
+
+  turbopack: {
+    root: "C:/Users/premk_vnesai/OneDrive/Desktop/nextjs",
   },
 };
 
