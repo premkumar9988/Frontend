@@ -1,12 +1,12 @@
 "use client";
- 
-import { useState } from "react";
+
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import "@/styles/auth.css";
 import AuthInput from "@/components/AuthInput";
 import AuthButton from "@/components/AuthButton";
- 
+
 const LockIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -14,14 +14,13 @@ const LockIcon = () => (
     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
- 
+
 const LogoIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
   </svg>
 );
- 
 
 function getStrength(pass) {
   let s = 0;
@@ -33,14 +32,13 @@ function getStrength(pass) {
 }
 const STRENGTH_LABELS = ["", "Weak", "Fair", "Good", "Strong"];
 const STRENGTH_COLORS = ["", "#ef4444", "#f97316", "#eab308", "#22c55e"];
- 
+
 const RULES = [
   { label: "At least 8 characters", test: (p) => p.length >= 8 },
   { label: "One uppercase letter", test: (p) => /[A-Z]/.test(p) },
   { label: "One number", test: (p) => /[0-9]/.test(p) },
   { label: "One special character", test: (p) => /[^A-Za-z0-9]/.test(p) },
 ];
- 
 
 function validate(f) {
   const e = {};
@@ -50,25 +48,23 @@ function validate(f) {
   else if (f.confirm !== f.password) e.confirm = "Passwords do not match.";
   return e;
 }
- 
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
- 
+
   const [fields, setFields] = useState({ password: "", confirm: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
- 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFields((p) => ({ ...p, [name]: value }));
     if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
   };
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate(fields);
@@ -79,32 +75,32 @@ export default function ResetPasswordPage() {
     setDone(true);
     setTimeout(() => router.push("/auth/login"), 2000);
   };
- 
+
   const ps = getStrength(fields.password);
- 
+
   return (
     <div className="auth-page">
       <div className="auth-card">
- 
+
         {/* Logo */}
         <Link href="/" className="auth-logo">
           <div className="auth-logo-mark"><LogoIcon /></div>
           <span className="auth-logo-text">Reset Password</span>
         </Link>
- 
+
         {/* Progress dots */}
         <div className="auth-progress">
           <div className="auth-progress-dot done" />
           <div className="auth-progress-dot done" />
           <div className="auth-progress-dot active" />
         </div>
- 
+
         {/* Step badge */}
         <span className="auth-step-badge">
           <span className="auth-step-badge-dot" />
           Final step
         </span>
- 
+
         {!done ? (
           <>
             <div style={{ height: "0.75rem" }} />
@@ -115,7 +111,7 @@ export default function ResetPasswordPage() {
                 <> Resetting for <strong style={{ color: "var(--gray-700)" }}>{email}</strong>.</>
               )}
             </p>
- 
+
             <form onSubmit={handleSubmit} noValidate>
               <div>
                 <AuthInput
@@ -129,7 +125,7 @@ export default function ResetPasswordPage() {
                   autoComplete="new-password"
                   required
                 />
- 
+
                 {/* Strength bar */}
                 {fields.password && (
                   <div style={{ marginTop: "-0.6rem", marginBottom: "0.6rem" }}>
@@ -147,7 +143,7 @@ export default function ResetPasswordPage() {
                     </div>
                   </div>
                 )}
- 
+
                 {/* Requirements checklist */}
                 {fields.password && (
                   <ul style={{
@@ -182,7 +178,7 @@ export default function ResetPasswordPage() {
                   </ul>
                 )}
               </div>
- 
+
               <AuthInput
                 id="confirm" name="confirm" type="password"
                 label="Confirm new password"
@@ -194,9 +190,9 @@ export default function ResetPasswordPage() {
                 autoComplete="new-password"
                 required
               />
- 
+
               <div style={{ height: "0.4rem" }} />
- 
+
               <AuthButton loading={loading} loadingText="Resetting password…">
                 Reset password
                 {!loading && (
@@ -220,7 +216,7 @@ export default function ResetPasswordPage() {
                 <path d="M20 6L9 17l-5-5" />
               </svg>
             </div>
- 
+
             <div className="auth-alert auth-alert-success" style={{ marginTop: "0.5rem" }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -228,14 +224,14 @@ export default function ResetPasswordPage() {
               </svg>
               Password reset successfully!
             </div>
- 
+
             <h2 className="auth-heading">All done!</h2>
             <p className="auth-subheading">
               Your password has been updated. Redirecting you to sign in…
             </p>
           </div>
         )}
- 
+
         <p className="auth-footer-note">
           Remember your password?{" "}
           <Link href="/auth/login" style={{ color: "var(--brand-600)", fontWeight: 500 }}>
@@ -246,4 +242,11 @@ export default function ResetPasswordPage() {
     </div>
   );
 }
- 
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div className="auth-page" />}>
+      <ResetPasswordForm />
+    </Suspense>
+  );
+}
