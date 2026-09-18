@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import "@/styles/auth.css";
 import AuthButton from "@/components/AuthButton";
 
+export const dynamic = "force-dynamic";
 
 const OTP_LENGTH = 6;
 const RESEND_COOLDOWN = 30;
@@ -26,7 +27,6 @@ export default function OtpVerifyPage() {
 
   const inputRefs = useRef([]);
 
-  
   useEffect(() => {
     if (countdown <= 0) {
       setCanResend(true);
@@ -36,7 +36,6 @@ export default function OtpVerifyPage() {
     return () => clearTimeout(t);
   }, [countdown]);
 
-  
   useEffect(() => {
     inputRefs.current[0]?.focus();
   }, []);
@@ -66,7 +65,6 @@ export default function OtpVerifyPage() {
     }
   };
 
-
   const handlePaste = (e) => {
     e.preventDefault();
     const text = e.clipboardData
@@ -75,11 +73,17 @@ export default function OtpVerifyPage() {
       .slice(0, OTP_LENGTH);
 
     const next = Array(OTP_LENGTH).fill("");
-    text.split("").forEach((ch, i) => (next[i] = ch));
+    text.split("").forEach((ch, i) => {
+      next[i] = ch;
+    });
     setDigits(next);
+
+    const lastIndex = Math.min(text.length, OTP_LENGTH) - 1;
+    if (lastIndex >= 0) {
+      inputRefs.current[lastIndex]?.focus();
+    }
   };
 
- 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -105,13 +109,12 @@ export default function OtpVerifyPage() {
 
     setTimeout(() => {
       if (context === "reset") {
-        router.push(`/auth/reset-password?email=${email}`);
+        router.push(`/auth/reset-password?email=${encodeURIComponent(email)}`);
       } else {
         router.push("/");
       }
     }, 1200);
   };
-
 
   const handleResend = async () => {
     if (!canResend) return;
@@ -129,7 +132,6 @@ export default function OtpVerifyPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-
         <Link href="/" className="auth-logo">
           <span>Verify OTP</span>
         </Link>
@@ -137,9 +139,7 @@ export default function OtpVerifyPage() {
         {!verified ? (
           <>
             <h1 className="auth-heading">Enter OTP</h1>
-
             <p>Sent to: {email}</p>
-
             {error && <p style={{ color: "red" }}>{error}</p>}
 
             <form onSubmit={handleSubmit}>
@@ -150,6 +150,8 @@ export default function OtpVerifyPage() {
                     ref={(el) => (inputRefs.current[i] = el)}
                     value={d}
                     maxLength={1}
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
                     onChange={(e) => handleDigitChange(i, e)}
                     onKeyDown={(e) => handleKeyDown(i, e)}
                     className="otp-box"
@@ -162,13 +164,18 @@ export default function OtpVerifyPage() {
               </AuthButton>
             </form>
 
-            <button onClick={handleResend} disabled={!canResend}>
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={!canResend}
+              style={{ marginTop: "1rem" }}
+            >
               {canResend ? "Resend" : `Wait ${countdown}s`}
             </button>
           </>
         ) : (
           <div style={{ textAlign: "center" }}>
-            <h2> Verified</h2>
+            <h2>Verified</h2>
             <p>Redirecting...</p>
           </div>
         )}
