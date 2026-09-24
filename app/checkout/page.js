@@ -112,29 +112,36 @@ const handlePayment = async () => {
   try {
     const trackingNumber = "TRK" + Date.now();
 
-  
     await saveOrder(trackingNumber);
 
     localStorage.setItem("trackingNumber", trackingNumber);
 
-    const res = await fetch('/api/stripe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: total }),
+    const res = await fetch("/api/stripe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: total,
+      }),
     });
 
     const data = await res.json();
 
+    if (!res.ok) {
+      throw new Error(data.message || "Payment session failed");
+    }
+
     if (data.url) {
       window.location.href = data.url;
+    } else {
+      throw new Error("Stripe payment URL not received");
     }
-  
   } catch (error) {
-    console.error(error);
-  } finally {
+    console.error("Payment error:", error);
+    alert(error.message || "Payment failed");
     setLoading(false);
   }
-
 };
   return (
     <div style={p.page}>
