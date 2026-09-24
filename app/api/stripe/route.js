@@ -4,7 +4,12 @@ import Stripe from "stripe";
 export async function POST(request) {
   try {
     const secretKey = process.env.STRIPE_SECRET_KEY;
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+    const forwardedHost = request.headers.get("x-forwarded-host");
+    const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+    const baseUrl = forwardedHost
+      ? `${forwardedProto}://${forwardedHost}`
+      : request.nextUrl?.origin || process.env.NEXT_PUBLIC_BASE_URL;
 
     if (!secretKey) {
       console.error("Missing STRIPE_SECRET_KEY environment variable");
@@ -15,9 +20,9 @@ export async function POST(request) {
     }
 
     if (!baseUrl) {
-      console.error("Missing NEXT_PUBLIC_BASE_URL environment variable");
+      console.error("Unable to determine site base URL");
       return NextResponse.json(
-        { message: "Server misconfigured: missing NEXT_PUBLIC_BASE_URL" },
+        { message: "Server misconfigured: unable to determine site base URL" },
         { status: 500 }
       );
     }
