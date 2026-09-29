@@ -7,7 +7,7 @@ export async function POST(request) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
     if (!secretKey) {
-      console.error("Missing STRIPE_SECRET_KEY environment variable");
+      console.error("Missing STRIPE_SECRET_KEY");
       return NextResponse.json(
         { message: "Server misconfigured: missing STRIPE_SECRET_KEY" },
         { status: 500 }
@@ -15,7 +15,7 @@ export async function POST(request) {
     }
 
     if (!baseUrl) {
-      console.error("Missing NEXT_PUBLIC_BASE_URL environment variable");
+      console.error("Missing NEXT_PUBLIC_BASE_URL");
       return NextResponse.json(
         { message: "Server misconfigured: missing NEXT_PUBLIC_BASE_URL" },
         { status: 500 }
@@ -25,12 +25,17 @@ export async function POST(request) {
     const stripe = new Stripe(secretKey);
 
     const body = await request.json();
-    const { amount } = body;
+
+    const amount = Number(body.amount);
     const currency = body.currency || "inr";
 
-    console.log("Received body:", { amount, currency });
+    console.log("Creating Stripe session:", {
+      amount,
+      currency,
+      baseUrl,
+    });
 
-    if (!amount || typeof amount !== "number") {
+    if (!amount || amount <= 0 || !Number.isFinite(amount)) {
       return NextResponse.json(
         { message: "Valid amount required" },
         { status: 400 }
@@ -39,30 +44,38 @@ export async function POST(request) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+
       payment_method_types: ["card"],
+
       line_items: [
         {
           price_data: {
-            currency: currency,
+            currency,
             product_data: {
               name: "Book Purchase",
             },
-            unit_amount: amount * 100, // amount in rupees → paise
+            unit_amount: Math.round(amount * 100),
           },
           quantity: 1,
         },
       ],
+
       success_url: `${baseUrl}/success`,
-      cancel_url: `${baseUrl}/cancel`,
+      cancel_url: `${baseUrl}/checkout`,
     });
 
     return NextResponse.json({
+      success: true,
       url: session.url,
     });
   } catch (error) {
     console.error("STRIPE ERROR:", error);
+
     return NextResponse.json(
-      { message: error.message || "Payment failed" },
+      {
+        success: false,
+        message: error.message || "Payment failed",
+      },
       { status: 500 }
     );
   }
